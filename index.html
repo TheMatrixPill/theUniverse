@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planetarium Fritzlar</title>
+  <style>
+    /* Reset */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      color: #ffffff;
+      background: #050b1a;
+    }
+
+    img { max-width: 100%; display: block; }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Layout */
+    header {
+      background: radial-gradient(circle at top, #1a2a6c, #050b1a);
+      padding: 1.5rem 1rem 2rem;
+      text-align: center;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      background: #0b1433;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      z-index: 10;
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      padding: 0.75rem 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    nav li {
+      font-weight: 600;
+    }
+
+    section {
+      padding: 2rem 1rem;
+    }
+
+    section:nth-of-type(even) {
+      background: #0b1433;
+    }
+
+    h1, h2, h3 {
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 1rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-top: 1.25rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      color: #e0e4ff;
+    }
+
+    .logo {
+      max-width: 140px;
+      margin: 0 auto 1rem;
+    }
+
+    .claim {
+      font-size: 1.1rem;
+      color: #c7d2ff;
+      margin-bottom: 1.5rem;
+    }
+
+    .features {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature {
+      background: rgba(255,255,255,0.08);
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    }
+
+    @media (hover: hover) {
+    .feature:hover {
+      background: #9fb0ff;
+      color: #050b1a;
+      transform: translateY(-2px);
+    }
+  }
+
+    .image-block {
+      margin: 1.5rem 0;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    .program-item {
+      margin-bottom: 1.75rem;
+    }
+
+    .time {
+      font-size: 0.85rem;
+      color: #9fb0ff;
+      font-weight: 600;
+    }
+
+    .visit-block {
+      margin-bottom: 1.5rem;
+    }
+
+    footer {
+      background: #020713;
+      padding: 2rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    footer h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    footer p {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    /* Anchor offset for sticky nav */
+    section[id] {
+      scroll-margin-top: 3.5rem;
+    }
+
+    @media (min-width: 577px) {
+      body::before {
+        content: "Diese Ansicht ist für Smartphones (≤ 576 px) optimiert.";
+        display: block;
+        text-align: center;
+        background: #300;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* ===== BRAINROT MODE ===== */
+    @keyframes spinny { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+    @keyframes glitch { 0%{text-shadow:2px 0 red,-2px 0 cyan} 50%{text-shadow:-2px 0 red,2px 0 cyan} 100%{text-shadow:2px 0 red,-2px 0 cyan} }
+    @keyframes pulsebg { 0%{background:#050b1a} 25%{background:#1a0033} 50%{background:#002b36} 75%{background:#330000} 100%{background:#050b1a} } 50%{background:#12002b} 100%{background:#050b1a} }
+
+    body.brainrot {
+      animation: pulsebg 0.6s infinite;
+      transform: rotate(180deg) scale(1.05);
+      filter: hue-rotate(180deg) saturate(180%);
+      cursor: crosshair;
+      font-family: "Comic Sans MS", "Comic Neue", cursive;
+    }
+    body.brainrot h1, body.brainrot h2, body.brainrot h3 { animation: glitch 0.2s infinite; }
+    body.brainrot .feature { animation: shake 0.15s infinite; }
+    body.brainrot .logo { animation: spinny 2s linear infinite; }
+    body.brainrot nav { animation: shake 0.2s infinite; }
+
+    .brainrot-toggle {
+      font-size: 0.75rem;
+      background: #ff00aa;
+      color: #000;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      font-weight: 900;
+    }
+
+    .meme {
+      font-size: 1.1rem;
+      font-weight: 900;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .meme.big { font-size: 2rem; }
+    .meme.italic { font-style: italic; }
+    .meme.spin { animation: spinny 3s linear infinite; }
+    .meme.shake { animation: shake 0.2s infinite; }
+
+    @keyframes rainbow { 0%{filter:hue-rotate(0deg)} 100%{filter:hue-rotate(360deg)} }
+    @keyframes wobble { 0%{transform:rotate(0deg)} 25%{transform:rotate(3deg)} 50%{transform:rotate(-3deg)} 75%{transform:rotate(2deg)} 100%{transform:rotate(0deg)} }
+    @keyframes crawl { from{transform:translateX(100%)} to{transform:translateX(-200%)} }
+
+    body.brainrot img { animation: rainbow 0.8s infinite linear; }
+    body.brainrot p { animation: wobble 0.3s infinite; }
+    body.brainrot a { text-decoration: underline wavy #ff00aa; }
+
+    .marquee {
+      white-space: nowrap;
+      overflow: hidden;
+      font-weight: 900;
+      font-size: 1.1rem;
+      background: #ffea00;
+      color: #000;
+      padding: 0.25rem 0;
+    }
+    .marquee span { display:inline-block; padding-left:100%; animation: crawl 6s linear infinite; }
+
+    .screamer {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 900;
+      z-index: 9999;
+      text-align: center;
+    }
+    body.brainrot .screamer { display:flex; animation: glitch 0.15s infinite; }
+  </style>
+</head>
+<body>
+
+  <header id="start">
+    <!-- Wort-Bild-Marke (Logo) aus Teilaufgabe a -->
+    <img src="bilder/Bildmarke.jpg" alt="Planetarium Fritzlar Logo" class="logo" />
+    <h1>Planetarium Fritzlar</h1>
+    <p class="claim">Wir entführen Sie ins Weltall</p>
+
+    <div class="features">
+      <div class="feature">6‑Meter‑Kuppel</div>
+      <div class="feature">360‑Grad‑Fulldome‑Technik</div>
+      <div class="feature">Neue Location</div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#start">Start</a></li>
+      <li><a href="#programm">Programm</a></li>
+      <li><a href="#besuch">Ihr Besuch</a></li>
+      <li><a href="#" class="brainrot-toggle" onclick="document.body.classList.toggle('brainrot'); return false;">BRAINROT</a></li>
+    </ul>
+  </nav>
+
+  <div class="marquee"><span>67 • ITALIAN BRAINROT 🤌 • THE UNIVERSE IS SCREAMING • WHY IS EVERYTHING UPSIDE DOWN • 67 •</span></div>
+  <div class="screamer">DO NOT STARE AT THE GALAXY 👁️👁️</div>
+  <main>
+    <section aria-labelledby="start-title">
+      <div class="meme big spin">67</div>
+      <div class="meme italic">🤌🤌 ITALIAN BRAINROT DETECTED 🤌🤌</div>
+      <h2 id="start-title">Willkommen im neuen Planetarium</h2>
+
+      <div class="image-block">
+        <img src="bilder/Bild_01.jpg" alt="Blick in die Kuppel des Planetariums" />
+      </div>
+
+      <p>
+        Die Sternfreunde Fritzlar sind in die Gießener Straße 77 in Fritzlar umgezogen. Besuchen Sie uns in unserem hochmodernen, nagelneuen Planetarium.
+      </p>
+      <p>
+        Auf unserer sechs Meter großen Kuppel präsentieren wir Ihnen ab sofort mithilfe unserer 360‑Grad‑Fulldome‑Technik den Weltraum, wie Sie ihn noch nicht erlebt haben. Reisen Sie mit uns zum Mond und zu fremden Planeten, wandeln Sie durch die Milchstraße und gehen Sie mit uns den großen Fragen nach: Gibt es unbekanntes Leben im Universum?
+      </p>
+
+      <h3>Technische Ausstattung</h3>
+      <p>
+        Das Planetarium Fritzlar verfügt über neueste Technik und ein computergesteuertes Projektionssystem, das Sterne in erstaunlicher Schärfe zeigen und kosmische Weiten ganz nah heranholen kann. Wir bieten 30 Plätze unter unserer sechs Meter großen Kuppel.
+      </p>
+    </section>
+
+    <section id="programm" aria-labelledby="programm-title">
+      <div class="meme shake">WHY IS THE UNIVERSE LOOKING AT ME</div>
+      <h2 id="programm-title">Programm</h2>
+
+      <div class="program-item">
+        <h3>Expedition in die Milchstraße</h3>
+        <p>
+          Häufig ist das leuchtend helle Band der Milchstraße sogar mit dem bloßen Auge zu erkennen: Was wir da sehen, ist unsere eigene Galaxie. In diesem Vortrag zoomen wir so nah heran, dass sich Milliarden Einzelsterne zeigen, aus der die Milchstraße besteht.
+        </p>
+        <p class="time">Samstags, 15 Uhr</p>
+      </div>
+
+      <div class="program-item">
+        <h3>Schwarze Löcher</h3>
+        <p>
+          Was einem Schwarzen Loch zu nahe kommt, verschwindet für immer. Sogar Licht! In diesem Vortrag wagen wir uns dennoch ganz nah an die größten Geheimnisse des Weltalls heran.
+        </p>
+        <p class="time">Sonntags, 15 Uhr</p>
+      </div>
+
+      <div class="program-item">
+        <h3>Auf der Suche nach Leben</h3>
+        <p>
+          Sind wir allein? Generationen von Wissenschaftlern stellten sich bereits diese Frage. In diesem Vortrag besuchen wir nicht nur den Mars, auf dem bereits Wasser entdeckt wurde, sondern auch Meteoriten, die als Transportmittel für biochemische Moleküle dienen können.
+        </p>
+        <p class="time">Termine nach Vereinbarung</p>
+      </div>
+    </section>
+
+    <section id="besuch" aria-labelledby="besuch-title">
+      <h2 id="besuch-title">Ihr Besuch</h2>
+
+      <div class="visit-block">
+        <h3>Adresse</h3>
+        <p>
+          Planetarium Fritzlar<br />
+          Gießener Straße 77<br />
+          34560 Fritzlar<br />
+          Fon: 05622 9118896660<br />
+          E‑Mail: info@planetarium-fritzlar.de
+        </p>
+      </div>
+
+      <div class="visit-block">
+        <h3>Öffnungszeiten</h3>
+        <p>
+          Mittwoch–Freitag: 12 bis 17 Uhr<br />
+          Samstag–Sonntag: 12 bis 20 Uhr
+        </p>
+      </div>
+
+      <div class="visit-block">
+        <h3>Eintritt</h3>
+        <p>
+          Erwachsene: 6 Euro<br />
+          Ermäßigt: 4 Euro<br />
+          Kinder bis 18 Jahre: 2 Euro
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="meme big">THIS IS NOT A PLANETARIUM</div>
+    <div class="footer-links">
+      <span>Impressum</span>
+      <span>Datenschutz</span>
+    </div>
+
+    <h3>Kontakt</h3>
+    <p>
+      Fon: 05622 9118896660<br />
+      E‑Mail: info@planetarium-fritzlar.de
+    </p>
+
+    <h3>Öffnungszeiten</h3>
+    <p>
+      Mittwoch–Freitag: 12 bis 17 Uhr<br />
+      Samstag–Sonntag: 12 bis 20 Uhr
+    </p>
+  </footer>
+
+</body>
+</html>
